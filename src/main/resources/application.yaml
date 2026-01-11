@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: AirbnbClone
+  datasource:
+    url: jdbc:postgresql://localhost:5432/airBnb
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show.sql: true
+    properties.hibernate.format_sql: true
+
+server.servlet.context-path: /api/v1
