@@ -11,3 +11,5 @@ spring:
     properties.hibernate.format_sql: true
 
 server.servlet.context-path: /api/v1
+jwt:
+  secret-key: sdhfjbjrhbv424hvbj4vjv1jv4nlknohvdj1v2jv55v14ve14ndqdb1irvbkkjqb4kj14bk1241kj24k1

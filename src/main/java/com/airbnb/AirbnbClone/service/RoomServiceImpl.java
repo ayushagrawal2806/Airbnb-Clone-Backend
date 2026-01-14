@@ -3,13 +3,16 @@ package com.airbnb.AirbnbClone.service;
 import com.airbnb.AirbnbClone.dto.RoomDto;
 import com.airbnb.AirbnbClone.entity.Hotel;
 import com.airbnb.AirbnbClone.entity.Room;
+import com.airbnb.AirbnbClone.entity.User;
 import com.airbnb.AirbnbClone.exceptions.ResourceNotFoundException;
+import com.airbnb.AirbnbClone.exceptions.UnAuthorizedException;
 import com.airbnb.AirbnbClone.mapper.RoomMapper;
 import com.airbnb.AirbnbClone.repository.HotelRepository;
 import com.airbnb.AirbnbClone.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +34,10 @@ public class RoomServiceImpl implements RoomService{
         Hotel hotel = hotelRepository
                 .findById(hotelId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id " + hotelId));
+        User user = getCurrentUser();
+        if(!user.equals(hotel.getOwner())){
+            throw  new UnAuthorizedException("Hotel does not belong to this user with id" + user.getId());
+        }
 
         Room room = roomMapper.toEntity(roomDto);
 
@@ -72,8 +79,17 @@ public class RoomServiceImpl implements RoomService{
                 .orElseThrow(() -> new ResourceNotFoundException("Room with id not found" + roomId));
 
 //       this line will delete all inventory of that particular room
+        User user = getCurrentUser();
+        if(!user.equals(room.getHotel().getOwner())){
+            throw  new UnAuthorizedException("Hotel does not belong to this user with id" + user.getId());
+        }
         inventoryService.deleteAllInventory(room);
         roomRepository.deleteById(roomId);
 
+    }
+
+    public User getCurrentUser(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user;
     }
 }

@@ -29,4 +29,6 @@ public class HotelBookingController {
         BookingDto bookingDto = bookingService.addGuest(bookingId , guestDtoList);
         return ResponseEntity.ok(bookingDto);
     }
+
+
 }

@@ -44,7 +44,7 @@ public class Hotel {
     @Embedded // use of this to merge the class into this class for example all contactInfo feilds will be set inside this class(hotel) table
     private HotelContactInfo contactInfo;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User owner;
 
     @OneToMany(mappedBy = "hotel")

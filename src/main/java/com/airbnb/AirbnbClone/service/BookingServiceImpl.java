@@ -6,18 +6,21 @@ import com.airbnb.AirbnbClone.dto.GuestDto;
 import com.airbnb.AirbnbClone.entity.*;
 import com.airbnb.AirbnbClone.entity.enums.BookingStatus;
 import com.airbnb.AirbnbClone.exceptions.ResourceNotFoundException;
+import com.airbnb.AirbnbClone.exceptions.UnAuthorizedException;
 import com.airbnb.AirbnbClone.mapper.BookingMapper;
 import com.airbnb.AirbnbClone.mapper.GuestMapper;
 import com.airbnb.AirbnbClone.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -37,11 +40,11 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto initialiseBooking(BookingRequestDto bookingRequestDto) {
         Hotel hotel = hotelRepository
                 .findById(bookingRequestDto.getHotelId()).orElseThrow(() ->
-                        new ResourceNotFoundException("hotel not found with this id" + bookingRequestDto.getHotelId()));
+                        new ResourceNotFoundException("hotel not found with this id " + bookingRequestDto.getHotelId()));
 
         Room room = roomRepository
                 .findById(bookingRequestDto.getRoomId()).orElseThrow(() ->
-                        new ResourceNotFoundException("Room not found with this id" + bookingRequestDto.getRoomId()));
+                        new ResourceNotFoundException("Room not found with this id " + bookingRequestDto.getRoomId()));
 
         List<Inventory> inventories = inventoryRepository.findAndLockAvailableInventory(
                 bookingRequestDto.getRoomId(),
@@ -62,11 +65,6 @@ public class BookingServiceImpl implements BookingService {
 
         inventoryRepository.saveAll(inventories);
 
-
-//        TODO: Remove dummy user;
-
-
-//        TODO: Calculate dynamic price;
 
         Booking booking = Booking.builder()
                 .roomsCount(bookingRequestDto.getRoomsCount())
@@ -95,13 +93,18 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalStateException("Booking is already expired");
         }
 
+        User user = getCurrentUser();
+        if(!user.equals(booking.getUser())){
+                throw  new UnAuthorizedException("Booking does not belong to this user with id" + user.getId());
+        }
+
         if(booking.getStatus() != BookingStatus.RESERVED){
             throw new IllegalStateException("Booking is not under reserved state");
         }
 
         for(GuestDto guestDto : guestDtoList){
             Guest guest = guestMapper.toEntity(guestDto);
-            guest.setUser(getCurrentUser());
+            guest.setUser(user);
             guest = guestRepository.save(guest);
             booking.getGuest().add(guest);
         }
@@ -111,16 +114,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
 
+
     public boolean hasBookingExpired(Booking booking){
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
     }
 
     public User getCurrentUser(){
-        User user = new User();
-        user.setId(1L);
-        user.setName("ayush");
-        user.setEmail("ayush@gmail.com");
-
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user;
     }
 }
