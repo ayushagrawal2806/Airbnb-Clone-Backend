@@ -1,4 +1,4 @@
-package com.airbnb.AirbnbClone.service;
+package com.airbnb.AirbnbClone.service.implementation;
 
 import com.airbnb.AirbnbClone.entity.User;
 import com.airbnb.AirbnbClone.exceptions.ResourceNotFoundException;

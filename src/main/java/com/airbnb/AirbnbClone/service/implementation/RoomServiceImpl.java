@@ -1,4 +1,4 @@
-package com.airbnb.AirbnbClone.service;
+package com.airbnb.AirbnbClone.service.implementation;
 
 import com.airbnb.AirbnbClone.dto.RoomDto;
 import com.airbnb.AirbnbClone.entity.Hotel;
@@ -9,6 +9,8 @@ import com.airbnb.AirbnbClone.exceptions.UnAuthorizedException;
 import com.airbnb.AirbnbClone.mapper.RoomMapper;
 import com.airbnb.AirbnbClone.repository.HotelRepository;
 import com.airbnb.AirbnbClone.repository.RoomRepository;
+import com.airbnb.AirbnbClone.service.InventoryService;
+import com.airbnb.AirbnbClone.service.RoomService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +22,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class RoomServiceImpl implements RoomService{
+public class RoomServiceImpl implements RoomService {
 
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;

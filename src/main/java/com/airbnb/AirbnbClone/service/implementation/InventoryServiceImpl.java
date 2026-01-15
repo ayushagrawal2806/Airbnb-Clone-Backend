@@ -1,14 +1,13 @@
-package com.airbnb.AirbnbClone.service;
+package com.airbnb.AirbnbClone.service.implementation;
 
-import com.airbnb.AirbnbClone.dto.HotelDto;
 import com.airbnb.AirbnbClone.dto.HotelPriceDto;
 import com.airbnb.AirbnbClone.dto.HotelSearchRequest;
-import com.airbnb.AirbnbClone.entity.Hotel;
 import com.airbnb.AirbnbClone.entity.Inventory;
 import com.airbnb.AirbnbClone.entity.Room;
 import com.airbnb.AirbnbClone.mapper.HotelMapper;
 import com.airbnb.AirbnbClone.repository.HotelMinPriceRepository;
 import com.airbnb.AirbnbClone.repository.InventoryRepository;
+import com.airbnb.AirbnbClone.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +22,7 @@ import java.time.temporal.ChronoUnit;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class InventoryServiceImpl implements InventoryService{
+public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final HotelMapper hotelMapper;

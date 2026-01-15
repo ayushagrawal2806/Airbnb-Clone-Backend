@@ -1,9 +1,8 @@
 package com.airbnb.AirbnbClone.Filter;
 
 import com.airbnb.AirbnbClone.entity.User;
-import com.airbnb.AirbnbClone.repository.UserRepository;
 import com.airbnb.AirbnbClone.security.JWTService;
-import com.airbnb.AirbnbClone.service.UserService;
+import com.airbnb.AirbnbClone.service.implementation.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

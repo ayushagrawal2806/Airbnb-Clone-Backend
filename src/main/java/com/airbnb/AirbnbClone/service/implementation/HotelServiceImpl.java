@@ -1,4 +1,4 @@
-package com.airbnb.AirbnbClone.service;
+package com.airbnb.AirbnbClone.service.implementation;
 
 
 import com.airbnb.AirbnbClone.dto.HotelDto;
@@ -13,6 +13,8 @@ import com.airbnb.AirbnbClone.mapper.HotelMapper;
 import com.airbnb.AirbnbClone.mapper.RoomMapper;
 import com.airbnb.AirbnbClone.repository.HotelRepository;
 import com.airbnb.AirbnbClone.repository.RoomRepository;
+import com.airbnb.AirbnbClone.service.HotelService;
+import com.airbnb.AirbnbClone.service.InventoryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +22,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class HotelServiceImpl implements HotelService{
+public class HotelServiceImpl implements HotelService {
     private final RoomMapper roomMapper;
 
     private final HotelRepository hotelRepository;
@@ -110,6 +111,9 @@ public class HotelServiceImpl implements HotelService{
         User user = getCurrentUser();
         if(!user.equals(hotel.getOwner())){
             throw  new UnAuthorizedException("Hotel does not belong to this user with id" + user.getId());
+        }
+        if(hotel.getRoom().isEmpty()){
+          throw new ResourceNotFoundException("Room not found with hotel id " + hotelId);
         }
        hotel.setActive(true);
        for(Room room : hotel.getRoom()){
