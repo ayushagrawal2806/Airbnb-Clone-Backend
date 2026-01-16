@@ -13,4 +13,6 @@ public interface HotelMapper {
     Hotel toEntity(HotelDto hotelDto);
 
     HotelPriceDto toHotelPriceDto(Hotel hotel);
+
+
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HotelPriceDto {
-    private HotelDto hotelDto;
+public class HotelPriceEntityDto {
+    private Hotel hotel;
     private Double price;
 }

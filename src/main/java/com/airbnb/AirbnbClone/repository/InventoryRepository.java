@@ -1,7 +1,5 @@
 package com.airbnb.AirbnbClone.repository;
 
-import com.airbnb.AirbnbClone.dto.HotelDto;
-import com.airbnb.AirbnbClone.dto.HotelSearchRequest;
 import com.airbnb.AirbnbClone.entity.Hotel;
 import com.airbnb.AirbnbClone.entity.Inventory;
 import com.airbnb.AirbnbClone.entity.Room;
@@ -15,6 +13,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -123,4 +122,34 @@ public interface InventoryRepository extends JpaRepository<Inventory , Long> {
                         @Param("roomsCount") Integer roomsCount);
 
 
+    @Query("""
+            SELECT i
+            FROM Inventory i
+            WHERE i.room.id = :roomId
+                AND i.date BETWEEN :startDate AND :endDate
+            """)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<Inventory> getInventoryAndLockBeforeUpdate(@Param("roomId") Long roomId,
+                                                 @Param("startDate") LocalDate startDate,
+                                                 @Param("endDate") LocalDate endDate
+                                                );
+
+
+    @Modifying
+    @Query("""
+            UPDATE Inventory i
+            SET i.surgeFactor = :surgeFactor,
+            i.closed = :closed
+            WHERE i.room.id = :roomId
+                AND i.date BETWEEN :startDate AND :endDate
+            """)
+    void updateInventory(@Param("roomId") Long roomId,
+                         @Param("startDate") LocalDate startDate,
+                         @Param("endDate") LocalDate endDate,
+                         @Param("closed") Boolean closed,
+                         @Param("surgeFactor") BigDecimal surgeFactor
+                         );
+
+
+    List<Inventory> findByRoomOrderByDate(Room room);
 }

@@ -10,5 +10,6 @@ public interface BookingMapper {
 
 
     @Mapping(target = "amount", source = "amount")
+    @Mapping(target = "guests" , source = "guests")
     BookingDto toDto(Booking booking);
 }

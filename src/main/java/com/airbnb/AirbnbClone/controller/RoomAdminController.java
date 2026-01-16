@@ -2,6 +2,7 @@ package com.airbnb.AirbnbClone.controller;
 
 import com.airbnb.AirbnbClone.dto.RoomDto;
 import com.airbnb.AirbnbClone.service.RoomService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,4 +40,11 @@ public class RoomAdminController {
         roomService.deleteRoomById(roomId);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{roomId}")
+    public ResponseEntity<RoomDto> updateRoomById(@PathVariable Long roomId,
+                                                  @PathVariable Long hotelId,
+                                                  @RequestBody RoomDto roomDto){
+    return ResponseEntity.ok(roomService.updateRoomById(roomId , hotelId , roomDto));
+    };
 }

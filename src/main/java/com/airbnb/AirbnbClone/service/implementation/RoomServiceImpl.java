@@ -14,10 +14,11 @@ import com.airbnb.AirbnbClone.service.RoomService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import static com.airbnb.AirbnbClone.util.AppUtils.getCurrentUser;
 
 @Service
 @Slf4j
@@ -90,8 +91,27 @@ public class RoomServiceImpl implements RoomService {
 
     }
 
-    public User getCurrentUser(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user;
+    @Override
+    public RoomDto updateRoomById(Long roomId, Long hotelId, RoomDto roomDto) {
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id " + hotelId));
+        User user = getCurrentUser();
+        if(!user.equals(hotel.getOwner())){
+            throw  new UnAuthorizedException("Hotel does not belong to this user with id" + user.getId());
+        }
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id"  + roomId));
+
+
+//        TODO if price or inventory is updated then update the inventory for this room also
+        roomMapper.updateRoomFromDto(roomDto, room);
+        room.setId(roomId);
+        room = roomRepository.save(room);
+
+        return roomMapper.toDto(room);
     }
+
+
 }

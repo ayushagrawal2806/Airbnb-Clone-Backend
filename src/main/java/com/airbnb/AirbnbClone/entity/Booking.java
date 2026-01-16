@@ -64,7 +64,7 @@ public class Booking {
                     name = "booking_id"
             )
     )
-    private Set<Guest> guest;
+    private Set<Guest> guests;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

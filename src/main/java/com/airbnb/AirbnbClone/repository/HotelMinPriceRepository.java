@@ -1,6 +1,7 @@
 package com.airbnb.AirbnbClone.repository;
 
 import com.airbnb.AirbnbClone.dto.HotelPriceDto;
+import com.airbnb.AirbnbClone.dto.HotelPriceEntityDto;
 import com.airbnb.AirbnbClone.entity.Hotel;
 import com.airbnb.AirbnbClone.entity.HotelMinPrice;
 import org.springframework.data.domain.Page;
@@ -18,14 +19,14 @@ public interface HotelMinPriceRepository extends JpaRepository<HotelMinPrice , L
      Optional<HotelMinPrice> findByHotelAndDate(Hotel hotel, LocalDate date) ;
 
     @Query("""
-            SELECT new com.airbnb.AirbnbClone.dto.HotelPriceDto(i.hotel , AVG(i.price))
+            SELECT new com.airbnb.AirbnbClone.dto.HotelPriceEntityDto(i.hotel , AVG(i.price))
             FROM HotelMinPrice i
             WHERE i.hotel.city = :city
                 AND i.date BETWEEN :startDate AND :endDate
                 AND i.hotel.active = true
             GROUP BY i.hotel
             """)
-    Page<HotelPriceDto> findHotelWithAvailableInventory(
+    Page<HotelPriceEntityDto> findHotelWithAvailableInventory(
             @Param("city") String city,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,

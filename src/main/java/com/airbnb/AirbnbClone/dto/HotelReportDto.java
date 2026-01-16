@@ -1,14 +1,17 @@
 package com.airbnb.AirbnbClone.dto;
 
-import com.airbnb.AirbnbClone.entity.Hotel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HotelPriceDto {
-    private HotelDto hotelDto;
-    private Double price;
+public class HotelReportDto {
+    private Long bookingCount;
+    private BigDecimal totalRevenue;
+    private BigDecimal avgRevenue;
+
+
 }

@@ -1,6 +1,7 @@
 package com.airbnb.AirbnbClone.service;
 
 import com.airbnb.AirbnbClone.dto.RoomDto;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface RoomService {
     RoomDto getRoomById(Long roomId);
 
     void deleteRoomById(Long roomId);
+
+    RoomDto updateRoomById(Long roomId, Long hotelId, RoomDto roomDto);
 }

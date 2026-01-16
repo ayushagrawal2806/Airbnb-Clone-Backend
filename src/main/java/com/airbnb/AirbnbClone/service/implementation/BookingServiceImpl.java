@@ -29,6 +29,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.airbnb.AirbnbClone.util.AppUtils.getCurrentUser;
 
 @Service
 @Slf4j
@@ -97,7 +100,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto addGuest(Long bookingId, List<GuestDto> guestDtoList) {
+    public BookingDto addGuest(Long bookingId, List<Long> guestIdList) {
+        log.info("guestIDs {}" , guestIdList);
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + bookingId));
 
@@ -114,13 +118,13 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalStateException("Booking is not under reserved state");
         }
 
-        for(GuestDto guestDto : guestDtoList){
-            Guest guest = guestMapper.toEntity(guestDto);
-            guest.setUser(user);
-            guest = guestRepository.save(guest);
-            booking.getGuest().add(guest);
+        for (Long guestId: guestIdList) {
+            Guest guest = guestRepository.findById(guestId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Guest not found with id: "+guestId));
+            booking.getGuests().add(guest);
         }
 
+        booking.setStatus(BookingStatus.GUEST_ADDED);
         booking = bookingRepository.save(booking);
         return bookingMapper.toDto(booking);
     }
@@ -136,8 +140,10 @@ public class BookingServiceImpl implements BookingService {
             throw  new UnAuthorizedException("Booking does not belong to this user with id" + user.getId());
         }
 
-        if(booking.getStatus() != BookingStatus.RESERVED){
-            throw new IllegalStateException("Booking is not under reserved state");
+        if(booking.getStatus() != BookingStatus.GUEST_ADDED){
+            throw new IllegalStateException(
+                    "At least one guest must be added before proceeding with payment."
+            );
         }
 
         if(hasBookingExpired(booking)){
@@ -233,13 +239,32 @@ public class BookingServiceImpl implements BookingService {
         return booking.getStatus().toString();
     }
 
+    @Override
+    public List<BookingDto> getAllBookingByHotelId(Long hotelId) {
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel with id is not found" + hotelId));
+
+        User user = getCurrentUser();
+        if(!user.equals(hotel.getOwner())){
+            throw  new UnAuthorizedException("Hotel does not belong to this user with id" + user.getId());
+        }
+
+        List<Booking> bookings = bookingRepository.findByHotel(hotel);
+        return bookings.stream().map(bookingMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookingDto> getMyBookings() {
+        User user  = getCurrentUser();
+        List<Booking> bookings = bookingRepository.findByUser(user);
+        return bookings.stream().map(bookingMapper::toDto).toList();
+    }
+
 
     public boolean hasBookingExpired(Booking booking){
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
     }
 
-    public User getCurrentUser(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user;
-    }
+
 }

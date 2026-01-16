@@ -12,7 +12,7 @@ import java.util.Map;
 public interface BookingService {
     BookingDto initialiseBooking(BookingRequestDto bookingRequestDto);
 
-    BookingDto addGuest(Long bookingId, List<GuestDto> guestDtoList);
+    BookingDto addGuest(Long bookingId, List<Long> guestIdList);
 
 
     String initiatePayment(Long bookingId);
@@ -22,4 +22,8 @@ public interface BookingService {
     void cancelBooking(Long bookingId);
 
     String getBookingStatus(Long bookingId);
+
+    List<BookingDto> getAllBookingByHotelId(Long hotelId);
+
+    List<BookingDto> getMyBookings();
 }

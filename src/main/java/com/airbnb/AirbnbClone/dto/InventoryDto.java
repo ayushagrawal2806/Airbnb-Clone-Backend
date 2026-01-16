@@ -1,10 +1,8 @@
 package com.airbnb.AirbnbClone.dto;
 
-import com.airbnb.AirbnbClone.entity.Guest;
+
 import com.airbnb.AirbnbClone.entity.Hotel;
 import com.airbnb.AirbnbClone.entity.Room;
-import com.airbnb.AirbnbClone.entity.User;
-import com.airbnb.AirbnbClone.entity.enums.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,41 +12,32 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @JsonPropertyOrder({
         "id",
-        "roomsCount",
-        "status",
-        "guest",
-        "amount",
-        "checkInDate",
-        "checkOutDate",
+        "date",
+        "price",
+        "surgeFactor",
+        "bookedCount",
+        "reservedCount",
+        "totalCount",
+        "closed",
         "createdAt",
-        "updatedAt",
+        "updatedAt"
 
 })
-public class BookingDto {
+public class InventoryDto {
+
     private Long id;
-    private Integer roomsCount;
-
-    private LocalDate checkInDate;
-
-
-    private LocalDate checkOutDate;
-
-    private BookingStatus status;
-
-    private Set<GuestDto> guests;
-
-    private BigDecimal amount;
-
-
+    private Integer bookedCount;
+    private Integer totalCount;
+    private Integer reservedCount;
+    private BigDecimal surgeFactor;
+    private Boolean closed;
+    private BigDecimal price;
+    private LocalDate date;
     private LocalDateTime createdAt;
-
-
     private LocalDateTime updatedAt;
-
 
 }
