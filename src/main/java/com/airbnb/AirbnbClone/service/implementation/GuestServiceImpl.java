@@ -32,7 +32,7 @@ public class GuestServiceImpl implements GuestService {
     public List<GuestDto> getAllGuests() {
         User user = getCurrentUser();
         log.info("Fetching all guests of user with id: {}", user.getId());
-        List<Guest> guests = guestRepository.findByUser(user);
+        List<Guest> guests = guestRepository.findByUserAndActiveTrue(user);
         return guests.stream().map(guestMapper::toDto).collect(Collectors.toList());
     }
 
@@ -74,7 +74,8 @@ public class GuestServiceImpl implements GuestService {
         User user = getCurrentUser();
         if(!user.equals(guest.getUser())) throw new AccessDeniedException("You are not the owner of this guest");
 
-        guestRepository.deleteById(guestId);
+        guest.setActive(false);
+        guestRepository.save(guest);
         log.info("Guest with ID: {} deleted successfully", guestId);
     }
 }

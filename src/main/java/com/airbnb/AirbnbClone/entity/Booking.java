@@ -38,6 +38,8 @@ public class Booking {
     @Column(unique = true)
     private String paymentSessionId;
 
+    private LocalDateTime expiresAt;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status;

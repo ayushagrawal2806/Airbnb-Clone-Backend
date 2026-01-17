@@ -38,6 +38,7 @@ public class AuthService {
 //    private final SessionService sessionService;
 
     public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto , HttpServletResponse response) {
+        log.info("login calling" );
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail() , loginRequestDto.getPassword())
         );
@@ -77,7 +78,9 @@ public class AuthService {
     };
 
     public  LoginResponseDto refresh(String refreshToken) {
+        log.info("user id {}" , refreshToken);
      Long userIdFromToken = service.getUserIdFromToken(refreshToken);
+
 //     sessionService.validateSession(refreshToken);
      User user = userRepository.findById(userIdFromToken).orElseThrow();
      String accessToken = service.generateAccessToken(user);

@@ -1,4 +1,4 @@
-package com.airbnb.AirbnbClone.service.implementation;
+package com.airbnb.AirbnbClone.service.scheduler;
 
 import com.airbnb.AirbnbClone.entity.Hotel;
 import com.airbnb.AirbnbClone.entity.HotelMinPrice;

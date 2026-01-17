@@ -89,6 +89,7 @@ public class BookingServiceImpl implements BookingService {
                 .checkOutDate(bookingRequestDto.getCheckOutDate())
                 .status(BookingStatus.RESERVED)
                 .user(getCurrentUser())
+                .expiresAt(LocalDateTime.now().plusMinutes(10))
                 .amount(totalPrice)
                 .build();
 
@@ -171,6 +172,7 @@ public class BookingServiceImpl implements BookingService {
                     .orElseThrow(() -> new ResourceNotFoundException("Booking not found for session id" + sessionId));
 
             booking.setStatus(BookingStatus.CONFIRMED);
+            booking.setExpiresAt(null);
             bookingRepository.save(booking);
 
             inventoryRepository.findAndLockReservedInventory(booking.getRoom().getId() , booking.getCheckInDate(),

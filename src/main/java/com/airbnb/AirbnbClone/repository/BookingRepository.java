@@ -3,6 +3,7 @@ package com.airbnb.AirbnbClone.repository;
 import com.airbnb.AirbnbClone.entity.Booking;
 import com.airbnb.AirbnbClone.entity.Hotel;
 import com.airbnb.AirbnbClone.entity.User;
+import com.airbnb.AirbnbClone.entity.enums.BookingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -18,4 +19,6 @@ public interface BookingRepository extends JpaRepository<Booking , Long> {
     List<Booking> findByHotelAndCreatedAtBetween(Hotel hotel, LocalDateTime startDate, LocalDateTime endDate);
 
     List<Booking> findByUser(User user);
+
+    List<Booking> findByExpiresAtBeforeAndStatusNot(LocalDateTime now, BookingStatus bookingStatus);
 }

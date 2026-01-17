@@ -113,13 +113,32 @@ public interface InventoryRepository extends JpaRepository<Inventory , Long> {
             SET i.bookedCount = i.bookedCount - :roomsCount
             WHERE i.room.id = :roomId
                 AND i.date BETWEEN :startDate AND :endDate
-                AND (i.totalCount - i.bookedCount) >= :roomsCount
                 AND i.closed = false
             """)
     void cancelBooking(@Param("roomId") Long roomId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate,
                         @Param("roomsCount") Integer roomsCount);
+
+    @Modifying
+    @Query("""
+            UPDATE Inventory i
+            SET i.reservedCount =
+                CASE
+                    WHEN i.reservedCount >= :roomsCount
+                    THEN i.reservedCount - :roomsCount
+                    ELSE 0
+                END
+            WHERE i.room.id = :roomId
+              AND i.date BETWEEN :startDate AND :endDate
+              AND i.closed = false
+    """)
+    int releaseReservedInventory(
+            @Param("roomId") Long roomId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("roomsCount") Integer roomsCount
+    );
 
 
     @Query("""

@@ -28,6 +28,9 @@ public class Guest {
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
+    @Column(nullable = false)
+    private Boolean active = true;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
