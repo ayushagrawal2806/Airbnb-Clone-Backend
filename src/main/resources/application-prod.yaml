@@ -16,6 +16,6 @@ spring:
 jwt:
   secret-key: ${JWT_SECRET}
 
-frontEnd-url: ${frontEnd_url}
-stripe-api-key: ${stripe_api_key}
-stripe-webHook-key: ${stripe_webhook_key}
+frontEnd-url: ${FRONTEND_URL}
+stripe-api-key: ${STRIPE_API_KEY}
+stripe-webHook-key: ${STRIPE_WEBHOOK_KEY}
