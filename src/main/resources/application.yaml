@@ -1,20 +1,15 @@
 spring:
   application:
     name: AirbnbClone
-  datasource:
-    url: jdbc:postgresql://localhost:5432/airBnb
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties.hibernate.format_sql: true
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}
 
-server.servlet.context-path: /api/v1
-jwt:
-  secret-key: sdhfjbjrhbv424hvbj4vjv1jv4nlknohvdj1v2jv55v14ve14ndqdb1irvbkkjqb4kj14bk1241kj24k1
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api/v1
 
-frontEnd-url: http://localhost:8080
-stripe-api-key: sk_test_51SpNygLUUkOgAsY6NgIZg2ZPSEve0RM6lHl2n5FcxiepLYtnWaiJOZ8SHhK3UvACL9kQPY8tNbSlXrwNyYSrvEQw00esCr6Ckb
-stripe-webHook-key: whsec_0719b2b87b9a6f2fe7da58b0a586c0efe7a761e26e0ccca7971422e687df0c5f
-#this webhook key will only valid for 90 days u have to do again do stripe login to get a new key
+
+
+
