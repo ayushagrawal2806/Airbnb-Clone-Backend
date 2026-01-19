@@ -19,3 +19,7 @@ jwt:
 frontEnd-url: ${FRONTEND_URL}
 stripe-api-key: ${STRIPE_API_KEY}
 stripe-webHook-key: ${STRIPE_WEBHOOK_KEY}
+
+springdoc:
+  api-docs:
+    enabled: false
