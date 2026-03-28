@@ -71,6 +71,8 @@ public class AuthService {
                     .email(signUpRequest.getEmail())
                     .name(signUpRequest.getName())
                     .roles(Set.of(UserRoles.GUEST))
+                    .gender(signUpRequest.getGender())
+                    .dateOfBirth(signUpRequest.getDateOfBirth())
                     .build();
 
         userRepository.save(result);
