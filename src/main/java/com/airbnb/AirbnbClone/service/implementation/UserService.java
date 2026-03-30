@@ -7,6 +7,7 @@ import com.airbnb.AirbnbClone.exceptions.ResourceNotFoundException;
 import com.airbnb.AirbnbClone.mapper.UserMapper;
 import com.airbnb.AirbnbClone.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import static com.airbnb.AirbnbClone.util.AppUtils.getCurrentUser;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -34,6 +36,7 @@ public class UserService implements UserDetailsService {
 
     public UserDto updateProfile(ProfileUpdateRequestDto profileUpdateRequestDto) {
         User user = getCurrentUser();
+
         if(profileUpdateRequestDto.getName() != null){
             user.setName(profileUpdateRequestDto.getName());
         }
@@ -44,12 +47,20 @@ public class UserService implements UserDetailsService {
             user.setGender(profileUpdateRequestDto.getGender());
         }
 
+        if(profileUpdateRequestDto.getRole() != null){
+
+            user.setRole(profileUpdateRequestDto.getRole());
+        }
+
         userRepository.save(user);
         return userMapper.toUserDto(user);
     }
 
+
+
     public  UserDto getMyProfile() {
         User user = getCurrentUser();
+
         return userMapper.toUserDto(user);
     }
 }

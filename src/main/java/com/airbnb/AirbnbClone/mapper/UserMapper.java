@@ -10,5 +10,6 @@ public interface UserMapper {
 
     @Mapping(source = "gender" , target = "gender")
     @Mapping(source = "dateOfBirth" , target = "dateOfBirth")
+    @Mapping(source = "role" , target = "role")
     UserDto toUserDto(User user);
 }

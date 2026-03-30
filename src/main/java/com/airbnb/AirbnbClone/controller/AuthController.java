@@ -33,8 +33,8 @@ public class AuthController {
 
 
     @PostMapping(path = "/signup")
-    public ResponseEntity<UserDto> signUp(@RequestBody SignupRequestDto user){
-        return  new ResponseEntity<>(authService.signUp(user) , HttpStatus.CREATED);
+    public ResponseEntity<LoginResponseDto> signUp(@RequestBody SignupRequestDto user , HttpServletResponse response){
+        return  new ResponseEntity<>(authService.signUp(user , response) , HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/refresh")

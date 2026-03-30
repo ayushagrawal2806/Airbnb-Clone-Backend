@@ -1,10 +1,12 @@
 package com.airbnb.AirbnbClone.dto;
 
 import com.airbnb.AirbnbClone.entity.enums.Gender;
+import com.airbnb.AirbnbClone.entity.enums.UserRoles;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @JsonPropertyOrder({
@@ -12,7 +14,8 @@ import java.time.LocalDate;
         "name",
         "email",
         "gender",
-        "dateOfBirth"
+        "dateOfBirth",
+        "role"
 })
 public class UserDto {
     private Long id;
@@ -20,4 +23,5 @@ public class UserDto {
     private String name;
     private LocalDate dateOfBirth;
     private Gender gender;
+    private UserRoles role;
 }

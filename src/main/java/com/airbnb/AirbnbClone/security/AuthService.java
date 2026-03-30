@@ -61,7 +61,7 @@ public class AuthService {
                 .build();
     }
 
-    public UserDto signUp(SignupRequestDto signUpRequest) {
+    public LoginResponseDto signUp(SignupRequestDto signUpRequest , HttpServletResponse response) {
         userRepository.findByEmail(signUpRequest.getEmail()).ifPresent(existingUser -> {
             throw new BadCredentialsException("User already exists");
         });;
@@ -70,13 +70,27 @@ public class AuthService {
                     .password(passwordEncoder.encode(signUpRequest.getPassword()))
                     .email(signUpRequest.getEmail())
                     .name(signUpRequest.getName())
-                    .roles(Set.of(UserRoles.GUEST))
+                    .role(UserRoles.GUEST)
                     .gender(signUpRequest.getGender())
                     .dateOfBirth(signUpRequest.getDateOfBirth())
                     .build();
+        User user =  userRepository.save(result);
+        String accessToken = service.generateAccessToken(user);
+        String refreshToken = service.generateRefreshToken(user);
 
-        userRepository.save(result);
-        return userMapper.toUserDto(result);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        response.addCookie(refreshTokenCookie);
+
+
+    return LoginResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .id(result.getId())
+                .name(result.getName())
+                .email(result.getEmail())
+                .build();
     };
 
     public  LoginResponseDto refresh(String refreshToken) {
